@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -26,5 +28,24 @@ public class VipAccount {
     private Date createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private Date modifiedAt;
+    @Value("minimal.amount")
     private BigDecimal minimalAmount;
+
+
+    static public VipAccount generateNewVipAccount() {
+        VipAccount account = new VipAccount();
+        account.setAccountNumber(generateAccountNumber());
+        account.setCreatedAt(new Date());
+        account.setAccountBalance(new BigDecimal(0));
+        account.setIsActive(true);
+        return account;
+    }
+
+
+    static private String generateAccountNumber() {
+        final String SAVINGS_ACCOUNT_PREFIX = "300-";
+        Random random = new Random();
+        return SAVINGS_ACCOUNT_PREFIX + random.nextInt(999999999);
+    }
+
 }

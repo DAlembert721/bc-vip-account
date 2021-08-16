@@ -5,5 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface VipAccountService extends BaseService<VipAccount>{
     Mono<VipAccount> findByAccountNumber(String accountNumber);
-    Mono<VipAccount> disableAccount(String id);
+    Mono<VipAccount> createVipAccount(String documentNumber);
+    Mono<VipAccount> disableAccount(String accountNumber);
 }

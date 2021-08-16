@@ -27,7 +27,7 @@ public class VipAccountServiceImpl implements VipAccountService {
     }
 
     @Override
-    public Mono<VipAccount> create(VipAccount request) {
+    public Mono<VipAccount> createVipAccount(String documentNumber) {
         return null;
     }
 
@@ -44,7 +44,7 @@ public class VipAccountServiceImpl implements VipAccountService {
     }
 
     @Override
-    public Mono<VipAccount> disableAccount(String id) {
+    public Mono<VipAccount> disableAccount(String accountNumber) {
         return null;
     }
 }

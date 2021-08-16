@@ -7,3 +7,5 @@ spring:
       uri: ${CONFIG_URI}
       username: ${SECURITY_USERNAME}
       password: ${SECURITY_PASSWORD}
+
+

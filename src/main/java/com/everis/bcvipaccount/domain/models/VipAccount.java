@@ -28,16 +28,17 @@ public class VipAccount {
     private Date createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private Date modifiedAt;
-    @Value("minimal.amount")
+
     private BigDecimal minimalAmount;
 
 
-    static public VipAccount generateNewVipAccount() {
+    static public VipAccount generateNewVipAccount(BigDecimal minimal) {
         VipAccount account = new VipAccount();
         account.setAccountNumber(generateAccountNumber());
         account.setCreatedAt(new Date());
         account.setAccountBalance(new BigDecimal(0));
         account.setIsActive(true);
+        account.setMinimalAmount(minimal);
         return account;
     }
 

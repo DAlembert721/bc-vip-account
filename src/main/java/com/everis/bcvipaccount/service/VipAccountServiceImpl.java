@@ -5,9 +5,12 @@ import com.everis.bcvipaccount.domain.repository.VipAccountRepository;
 import com.everis.bcvipaccount.domain.service.VipAccountService;
 import com.everis.bcvipaccount.dto.AccountClientRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.math.BigDecimal;
 
 @Service
 public class VipAccountServiceImpl implements VipAccountService {
@@ -17,6 +20,9 @@ public class VipAccountServiceImpl implements VipAccountService {
 
     @Autowired
     private PersonalWebClientService personalWebClientService;
+
+    @Value("${minimal.amount}")
+    private BigDecimal minimalAmount;
 
 
     @Override
@@ -33,7 +39,7 @@ public class VipAccountServiceImpl implements VipAccountService {
 
     @Override
     public Mono<VipAccount> createVipAccount(String documentNumber) {
-        VipAccount vipAccount = VipAccount.generateNewVipAccount();
+        VipAccount vipAccount = VipAccount.generateNewVipAccount(minimalAmount);
         AccountClientRequestDto accountClientRequestDto = AccountClientRequestDto.buildAccountClientRequest(vipAccount);
         return personalWebClientService.createAccountClient(accountClientRequestDto, documentNumber)
                 .flatMap(responseAccountClient -> vipAccountRepository.insert(vipAccount))

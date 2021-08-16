@@ -13,6 +13,7 @@ services:
       - SECURITY_PASSWORD=password
       - CONFIG_URI=https://config-server-pj2.mybluemix.net
       - ADMIN_URI=https://admin-server-pj2.mybluemix.net
+      - PERSONAL_CLIENT_URI=http://172.25.0.2:8080/
 networks:
   bootcampever:
     external: true

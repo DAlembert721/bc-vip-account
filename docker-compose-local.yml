@@ -1,0 +1,18 @@
+services:
+  bc-vip-account-service:
+    image: bc-vip-account-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - bootcampever
+    ports:
+      - 8082:8080
+    environment:
+      - SECURITY_USERNAME=admin
+      - SECURITY_PASSWORD=password
+      - CONFIG_URI=https://config-server-pj2.mybluemix.net
+      - ADMIN_URI=https://admin-server-pj2.mybluemix.net
+networks:
+  bootcampever:
+    external: true

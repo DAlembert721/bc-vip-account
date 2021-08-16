@@ -3,6 +3,7 @@ package com.everis.bcvipaccount.service;
 import com.everis.bcvipaccount.domain.models.VipAccount;
 import com.everis.bcvipaccount.domain.repository.VipAccountRepository;
 import com.everis.bcvipaccount.domain.service.VipAccountService;
+import com.everis.bcvipaccount.dto.AccountClientRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -13,6 +14,10 @@ public class VipAccountServiceImpl implements VipAccountService {
 
     @Autowired
     private VipAccountRepository vipAccountRepository;
+
+    @Autowired
+    private PersonalWebClientService personalWebClientService;
+
 
     @Override
     public Flux<VipAccount> findAll() {
@@ -28,12 +33,23 @@ public class VipAccountServiceImpl implements VipAccountService {
 
     @Override
     public Mono<VipAccount> createVipAccount(String documentNumber) {
-        return null;
+        VipAccount vipAccount = VipAccount.generateNewVipAccount();
+        AccountClientRequestDto accountClientRequestDto = AccountClientRequestDto.buildAccountClientRequest(vipAccount);
+        return personalWebClientService.createAccountClient(accountClientRequestDto, documentNumber)
+                .flatMap(responseAccountClient -> vipAccountRepository.insert(vipAccount))
+                .switchIfEmpty(Mono.error(new Exception("Error on create account")))
+                .onErrorResume(throwable -> Mono.error(new Exception("Error on create account")));
     }
 
     @Override
-    public Mono<VipAccount> update(String id, VipAccount request) {
-        return null;
+    public Mono<VipAccount> update(String accountNumber, VipAccount request) {
+        return vipAccountRepository.findByAccountNumber(accountNumber)
+                .flatMap(vipAccount -> {
+                    vipAccount.setAccountBalance(request.getAccountBalance());
+                    return vipAccountRepository.save(vipAccount);
+                })
+                .switchIfEmpty(Mono.error(new Exception("Error on update account")))
+                .onErrorResume(throwable -> Mono.error(new Exception("Error on update account")));
     }
 
     @Override
@@ -45,6 +61,12 @@ public class VipAccountServiceImpl implements VipAccountService {
 
     @Override
     public Mono<VipAccount> disableAccount(String accountNumber) {
-        return null;
+        return vipAccountRepository.findByAccountNumber(accountNumber)
+                .flatMap(vipAccount -> {
+                    vipAccount.setIsActive(false);
+                    return vipAccountRepository.save(vipAccount);
+                })
+                .switchIfEmpty(Mono.error(new Exception("Error on disable account")))
+                .onErrorResume(throwable -> Mono.error(new Exception("Error on disable account")));
     }
 }

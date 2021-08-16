@@ -13,12 +13,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class VipAccountRequestDto {
     private BigDecimal accountBalance;
-    private Boolean isActive;
 
     static public VipAccount requestToEntity(VipAccountRequestDto requestDto) {
         VipAccount vipAccount = new VipAccount();
         vipAccount.setAccountBalance(requestDto.getAccountBalance());
-        vipAccount.setIsActive(requestDto.getIsActive());
         return vipAccount;
     }
 }

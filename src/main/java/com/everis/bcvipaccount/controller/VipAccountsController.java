@@ -41,10 +41,9 @@ public class VipAccountsController implements BaseController<VipAccountRequestDt
     }
 
     @PutMapping("")
-    @Override
-    public Mono<VipAccountResponseDto> update(@RequestParam String id, VipAccountRequestDto request) {
+    public Mono<VipAccountResponseDto> update(@RequestParam String accountNumber, @RequestBody VipAccountRequestDto request) {
         VipAccount vipAccount = VipAccountRequestDto.requestToEntity(request);
-        return vipAccountService.update(id, vipAccount)
+        return vipAccountService.update(accountNumber, vipAccount)
                 .mapNotNull(VipAccountResponseDto::entityToResponse)
                 .switchIfEmpty(Mono.error(new Exception("Vip account not founded")))
                 .onErrorResume(throwable -> Mono.error(new Exception("Vip account not founded")));
